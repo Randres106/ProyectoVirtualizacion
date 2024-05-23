@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .chart {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+        }
+    </style>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart', 'timeline']});
+        google.charts.setOnLoadCallback(loadLogs);
+
+        async function loadLogs() {
+            const response = await fetch('/logs');
+            const logs = await response.json();
+
+            const serviceStarts = logs.filter(log => log.message.includes('Servidor iniciado'));
+            const userAdded = logs.filter(log => log.message.includes('Usuario agregado'));
+            const userDeleted = logs.filter(log => log.message.includes('Usuario eliminado'));
+
+            drawServiceStartsChart(serviceStarts);
+            drawUserActionsChart(userAdded, userDeleted);
+        }
+
+        function drawServiceStartsChart(serviceStarts) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'Fecha y Hora');
+            data.addColumn('number', 'Inicios del Servicio');
+            serviceStarts.forEach(log => data.addRow([new Date(log.timestamp), 1]));
+
+            const options = {
+                title: 'Inicios del Servicio',
+                hAxis: { title: 'Tiempo' },
+                vAxis: { title: 'Inicios' },
+                legend: 'none'
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('serviceStartsChart'));
+            chart.draw(data, options);
+        }
+
+        function drawUserActionsChart(userAdded, userDeleted) {
+            const data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'Fecha y Hora');
+            data.addColumn('number', 'Usuarios Agregados');
+            data.addColumn('number', 'Usuarios Eliminados');
+
+            const allLogs = userAdded.concat(userDeleted);
+            allLogs.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+            allLogs.forEach(log => {
+                const added = userAdded.some(user => user.timestamp === log.timestamp) ? 1 : 0;
+                const deleted = userDeleted.some(user => user.timestamp === log.timestamp) ? 1 : 0;
+                data.addRow([new Date(log.timestamp), added, deleted]);
+            });
+
+            const options = {
+                title: 'Acciones de Usuarios',
+                hAxis: { title: 'Tiempo' },
+                vAxis: { title: 'Cantidad' },
+                legend: { position: 'top' }
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('userActionsChart'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h1>Bienvenido a mi Landing Page</h1>
+    <form id="dataForm">
+        <input type="text" id="name" name="name" placeholder="Nombre" required>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <h2>Registros</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="dataTableBody">
+        </tbody>
+    </table>
+
+    <h2>Gráficos de Logs</h2>
+    <div id="serviceStartsChart" class="chart"></div>
+    <div id="userActionsChart" class="chart"></div>
+
+    <script>
+        async function loadData() {
+            const response = await fetch('/data');
+            const data = await response.json();
+            const dataTableBody = document.getElementById('dataTableBody');
+            dataTableBody.innerHTML = '';
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.id}</td>
+                    <td>${row.name}</td>
+                    <td>${row.email}</td>
+                    <td><button onclick="deleteData(${row.id})">Eliminar</button></td>
+                `;
+                dataTableBody.appendChild(tr);
+            });
+        }
+
+        async function deleteData(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+                const response = await fetch(`/data/${id}`, {
+                    method: 'DELETE',
+                });
+                const result = await response.json();
+                alert(result.message);
+                loadData();
+            }
+        }
+
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const response = await fetch('/data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email })
+            });
+            const result = await response.json();
+            alert(result.message);
+            loadData();
+        });
+
+        window.onload = function() {
+            loadData();
+            loadLogs();
+        };
+    </script>
+</body>
+</html>

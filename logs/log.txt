@@ -1,0 +1,18 @@
+2024-05-23T20:34:00.346Z - Servidor iniciado
+2024-05-23T20:34:42.728Z - Usuario agregado: ID 1, Nombre Rafael, Email raalvarezm@correo.url.edu.gt
+2024-05-23T20:36:35.102Z - Usuario agregado: ID 2, Nombre dasda, Email raalvarezm@correo.url.edu.gt
+2024-05-23T20:36:35.102Z - Usuario eliminado: ID 2
+2024-05-23T20:56:39.993Z - Servidor iniciado
+2024-05-23T21:05:27.375Z - Servidor iniciado
+2024-05-23T21:10:28.663Z - Servidor iniciado
+2024-05-23T21:11:03.070Z - Usuario agregado: ID 1, Nombre Rafael, Email raalvarezm@correo.url.edu.gt
+2024-05-23T21:11:24.226Z - Usuario eliminado: ID 1
+2024-05-23T21:17:32.300Z - Servidor iniciado
+2024-05-23T21:18:05.795Z - Usuario agregado: ID 1, Nombre Rafael, Email randres.mazariegos@gmail.com
+2024-05-23T21:21:01.003Z - Servidor iniciado
+2024-05-23T21:23:40.336Z - Usuario agregado: ID 1, Nombre Actividades, Email randres.mazariegos@gmail.com
+2024-05-23T21:23:57.315Z - Usuario agregado: ID 2, Nombre dsa, Email randres.mazariegos@gmail.com
+2024-05-23T21:24:06.556Z - Usuario eliminado: ID 1
+2024-05-23T23:08:37.611Z - Servidor iniciado
+2024-05-23T23:16:42.815Z - Usuario agregado: ID 1, Nombre Rafael, Email raalvarezm@correo.url.edu.gt
+2024-05-23T23:22:30.204Z - Usuario agregado: ID 2, Nombre Tico, Email randres.mazariegos@gmail.com

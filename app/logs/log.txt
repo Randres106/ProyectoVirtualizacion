@@ -1,0 +1,4 @@
+2024-05-23T23:24:31.715Z - Servidor iniciado
+2024-05-23T23:24:32.120Z - Servidor iniciado
+2024-05-23T23:31:17.968Z - Servidor iniciado
+2024-05-23T23:31:18.260Z - Servidor iniciado
